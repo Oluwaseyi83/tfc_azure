@@ -1,24 +1,22 @@
 terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "3.94.0"
-    }
-  }
-}
+  cloud {
+    organization = "Olu_Organization"
 
-terraform {
-backend "azurerm" {
- resource_group_name  = "StateFileRG"
-  storage_account_name = "statefilestorage01"
-  container_name       = "tstate"
-  key                  = "terraform.tfstate"
+    workspaces {
+      name = "First_Project_Workspace"
+    }
   }
 }
 
 provider "azurerm" {
   features {}
-  }
+
+  subscription_id   = var.subscription_id
+  tenant_id         = var.tenant_id
+  client_id         = var.client_id
+  client_secret     = var.client_secret
+}
+
 
 
 
