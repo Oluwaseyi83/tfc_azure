@@ -1,7 +1,7 @@
 # Create a Resource Group
 resource "azurerm_resource_group" "testrg" {
   name     = "myResourceGroup"
-  location = "East US" # Change this to your desired region
+  location = var.location # Change this to your desired region
 }
 
 #  Create Virtual Network
@@ -9,7 +9,7 @@ resource "azurerm_virtual_network" "testvn" {
   name                = "mytestVNet"
   resource_group_name = azurerm_resource_group.testrg.name
   location            = azurerm_resource_group.testrg.location
-  address_space       = ["10.0.0.0/16"]
+  address_space       = [var.address_space[0]]
 }
 
 resource "azurerm_availability_set" "azset" {
@@ -21,33 +21,34 @@ resource "azurerm_availability_set" "azset" {
 
   # Additional settings can be configured here if needed
 }
+
 # Create Availability Zones
 resource "azurerm_subnet" "public_subnet_1" {
   name                 = "public_subnet_1"
   resource_group_name  = azurerm_resource_group.testrg.name
   virtual_network_name = azurerm_virtual_network.testvn.name
-  address_prefixes     = ["10.0.1.0/24"]
+  address_prefixes =   [var.address_prefixes[0]]
 }
 
 resource "azurerm_subnet" "public_subnet_2" {
   name                 = "public_subnet_2"
   resource_group_name  = azurerm_resource_group.testrg.name
   virtual_network_name = azurerm_virtual_network.testvn.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = [var.address_prefixes[1]]
 }
 
 resource "azurerm_subnet" "private_subnet_1" {
   name                 = "private_subnet_1"
   resource_group_name  = azurerm_resource_group.testrg.name
   virtual_network_name = azurerm_virtual_network.testvn.name
-  address_prefixes     = ["10.0.3.0/24"]
+  address_prefixes     = [var.address_prefixes[2]]
 }
 
 resource "azurerm_subnet" "private_subnet_2" {
   name                 = "private_subnet_2"
   resource_group_name  = azurerm_resource_group.testrg.name
   virtual_network_name = azurerm_virtual_network.testvn.name
-  address_prefixes     = ["10.0.4.0/24"]
+  address_prefixes     = [var.address_prefixes[3]]
 }
 
 # Security Group
@@ -105,31 +106,36 @@ resource "azurerm_network_interface" "testNIC" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "testVM" {
-  name                = "test-virtual-machine"
-  resource_group_name = azurerm_resource_group.testrg.name
-  location            = azurerm_resource_group.testrg.location
-  size                = "Standard_F2"
-  admin_username      = "adminuser"
-  network_interface_ids = [
-    azurerm_network_interface.testNIC.id,
-  ]
 
-  admin_ssh_key {
-    username   = "adminuser"
-    public_key = file("accesskeys.pub")
-  }
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
-  }
 
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
 
-}
+
+# resource "azurerm_linux_virtual_machine" "testVM" {
+#   name                = "test-virtual-machine"
+#   resource_group_name = azurerm_resource_group.testrg.name
+#   location            = azurerm_resource_group.testrg.location
+#   size                = var.vm_size
+#   admin_username      = "adminuser"
+#   network_interface_ids = [
+#     azurerm_network_interface.testNIC.id,
+#   ]
+
+#   admin_ssh_key {
+#     username   = "adminuser"
+#     public_key = file("accesskeys.pub")
+#   }
+
+#   source_image_reference {
+#     publisher = var.image_publisher
+#     offer     = var.image_offer
+#     sku       = var.image_sku
+#     version   = var.image_version
+#   }
+
+#   os_disk {
+#     caching              = "ReadWrite"
+#     storage_account_type = "Standard_LRS"
+#   }
+
+# }
