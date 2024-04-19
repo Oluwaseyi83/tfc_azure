@@ -35,17 +35,17 @@ resource "azurerm_virtual_machine" "testVM" {
 
 
 
-resource "azurerm_virtual_machine_extension" "self-ir-cs" {
-  name                 = "self-hosted-ir-script"
-  virtual_machine_id   = azurerm_virtual_machine.testVM.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
-  auto_upgrade_minor_version = true
-  settings             = <<SETTINGS
-    {
-      "fileUris": ["${azurerm_storage_blob.copy_script.url}${data.azurerm_storage_account_sas.sas_token.sas}&sr=b"],
-      "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File gatewayInstall.ps1 ${azurerm_data_factory_integration_runtime_self_hosted.adf-ir.primary_authorization_key}"
-    }
-SETTINGS
-}
+# resource "azurerm_virtual_machine_extension" "self-ir-cs" {
+#   name                 = "self-hosted-ir-script"
+#   virtual_machine_id   = azurerm_virtual_machine.testVM.id
+#   publisher            = "Microsoft.Azure.Extensions"
+#   type                 = "CustomScript"
+#   type_handler_version = "2.0"
+#   auto_upgrade_minor_version = true
+#   settings             = <<SETTINGS
+#     {
+#       "fileUris": ["${azurerm_storage_blob.copy_script.url}${data.azurerm_storage_account_sas.sas_token.sas}&sr=b"],
+#       "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File gatewayInstall.ps1 ${azurerm_data_factory_integration_runtime_self_hosted.adf-ir.primary_authorization_key}"
+#     }
+# SETTINGS
+# }
