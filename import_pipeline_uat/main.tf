@@ -6,7 +6,7 @@ resource "azurerm_resource_group" "Sub1_RG_uat" {
 }
 
 
-resource "azurerm_data_factory" "consoleadf_uat" {
+resource "azurerm_data_factory" "consoleadf_uat1" {
   name                            = "consoleadf-uat"
   location                        = var.location
   resource_group_name             = azurerm_resource_group.Sub1_RG_uat.name
