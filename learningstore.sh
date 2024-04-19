@@ -189,3 +189,76 @@ resource "azurerm_linux_virtual_machine" "testVM" {
   }
 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+creation of container and blob storage
+
+resource "azurerm_storage_container" "test_container" {
+  name                  = "containerterraform"
+  storage_account_name  = azurerm_storage_account.test_storage_account.name
+  container_access_type = "private"
+}
+
+resource "azurerm_storage_blob" "blob_storage" {
+  name                   = "blobstorageterraform"
+  storage_account_name   = azurerm_storage_account.test_storage_account.name
+  storage_container_name = azurerm_storage_container.test_container.name
+  type                   = "Block"
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////
+
+ to create mysql_db_server
+resource "azurerm_mysql_server" "mysqlserver" {
+  name                = "mysqlserver-tf"
+  location            = azurerm_resource_group.Data_PipelineRG.location
+  resource_group_name = azurerm_resource_group.Data_PipelineRG.name
+
+  administrator_login          = "myadmin"
+  administrator_login_password = "admin@12345"
+
+  sku_name   = "GP_Gen5_2"
+  storage_mb = 5120
+  version    = "5.7"
+
+  auto_grow_enabled                 = true
+  backup_retention_days             = 7
+  geo_redundant_backup_enabled      = true
+  infrastructure_encryption_enabled = true
+  public_network_access_enabled     = false
+  ssl_enforcement_enabled           = true
+  ssl_minimal_tls_version_enforced  = "TLS1_2"
+}
+
+resource "azurerm_mysql_database" "mysqltest_db" {
+  name                = "mysqltestdb_tf"
+  resource_group_name = azurerm_resource_group.Data_PipelineRG.name
+  server_name         = azurerm_mysql_server.mysqlserver.name
+  charset             = "utf8"
+  collation           = "utf8_unicode_ci"
+
+  # prevent the possibility of accidental data loss
+  lifecycle { prevent_destroy = false }
+}
+
+
+resource "azurerm_data_factory_dataset_data_lake_storage_gen2" "AthletesADLSdataset" {
+  name                = "AthletesADLS"
+  resource_group_name = azurerm_resource_group.Data_PipelineRG.name
+  data_factory_id     = azurerm_data_factory.test_adf.id
+  format_type         = "DelimitedText"
+  linked_service_name = azurerm_data_factory_linked_service_data_lake_storage_gen2.data_lake_storage_ls.name
+  file_system         = "azuredatalaketest"
+  folder_path         = "raw_data"
+  file_name           = []
+  import_schema       = []
+  annotations         = []
+  compression_type    = []
+  parameters          = {}
+
+  depends_on = [azurerm_storage_data_lake_gen2_path.raw_data]
+
+}
