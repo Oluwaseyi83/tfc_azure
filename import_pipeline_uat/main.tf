@@ -1,12 +1,12 @@
 resource "azurerm_resource_group" "Sub1_RG_uat" {
-  name     = "Sub1_RG_uat1"
+  name     = "Sub1_RG_uat"
   location = var.location 
 
   tags  = { Env = "Dev" }
 }
 
 
-resource "azurerm_data_factory" "consoleadf_uat1" {
+resource "azurerm_data_factory" "consoleadf_uat" {
   name                            = "consoleadf-uat"
   location                        = var.location
   resource_group_name             = azurerm_resource_group.Sub1_RG_uat.name
