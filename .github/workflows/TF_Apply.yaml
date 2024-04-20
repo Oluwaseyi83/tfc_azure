@@ -10,13 +10,25 @@ jobs:
     name: "Terraform"
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+      # Mobile folder working directory.
+        working-directory: import_pipeline_uat
+
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
+
+
+        id: filter
         with:
+          filters: |
+            import_pipeline_uat:
+              - 'import_pipeline_uat/**
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Init
