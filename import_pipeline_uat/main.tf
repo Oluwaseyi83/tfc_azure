@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "Sub1_RG_uat" {
-  name     = "Sub1_RG_uat"
+  name     = "Sub_RG_uat"
   location = var.location 
 
   tags  = { Env = "Dev" }
