@@ -1,4 +1,4 @@
-name: "Terraform-Apply-Infra-Release"
+name: "Terraform-Destroy-Infra-Release"
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-      # specify the target folder here working directory.
+      # Mobile folder working directory.
         working-directory: import_pipeline_uat
 
 
@@ -23,7 +23,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
-          # use this to cinfigure your working folder
+
         id: filter
         with:
           filters: |
@@ -45,6 +45,6 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
-      - name: Terraform Apply
+      - name: Terraform Destroy
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+        run: terraform destroy -auto-approve
