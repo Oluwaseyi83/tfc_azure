@@ -1,50 +1,40 @@
-name: "Terraform-Destroy-Infra-Release"
+# name: "Terraform-Destroy-Infra-Release"
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  terraform:
-    name: "Terraform"
-    runs-on: ubuntu-latest
+# jobs:
+#   terraform:
+#     name: "Terraform"
+#     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-      # Mobile folder working directory.
-        working-directory: import_pipeline_uat
-
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+#     defaults:
+#       run:
+#       # Mobile folder working directory.
+#         working-directory: import_pipeline_uat
 
 
-        id: filter
-        with:
-          filters: |
-            import_pipeline_uat:
-              - 'import_pipeline_uat/**
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
+#       - name: Setup Terraform
+#         uses: hashicorp/setup-terraform@v1
 
-      - name: Terraform Plan
-        id: plan
-        if: github.event_name == 'push'
-        run: terraform plan -no-color
-        continue-on-error: true
 
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
+#         id: filter
+#         with:
+#           filters: |
+#             import_pipeline_uat:
+#               - 'import_pipeline_uat/**
+#           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      - name: Terraform Destroy
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform destroy -auto-approve == false
+#       - name: Terraform Init
+#         id: init
+#         run: terraform init
+
+#       - name: Terraform Destroy
+#         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#         run: terraform destroy -auto-approve
