@@ -68,3 +68,22 @@ resource "azurerm_data_factory_linked_service_sql_server" "SqlServerLinkedServic
     secret_name         = "password"
   }
 }
+
+resource "azurerm_storage_account" "olwaseyiteststorageaccoun1" {
+  name                            = "seyiteststorageaccoun1"
+  resource_group_name             = azurerm_resource_group.Sub1_RG_uat.name
+  location                        = var.location
+  account_tier                    = "Standard"
+  account_replication_type        = "LRS"
+  account_kind                    = "StorageV2"
+  is_hns_enabled                  = false
+  large_file_share_enabled        = true
+  allow_nested_items_to_be_public = false
+  
+}
+
+# resource "azurerm_storage_container" "testcontainer" {
+#   name                  = "testcontainer"
+#   storage_account_name  = azurerm_storage_account.olwaseyiteststorageaccoun1.name
+#   container_access_type = "private"
+# }
