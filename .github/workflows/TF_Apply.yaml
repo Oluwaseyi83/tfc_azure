@@ -13,7 +13,7 @@ jobs:
     defaults:
       run:
       # specify the target folder here working directory.
-        working-directory: import_pipeline_uat
+        working-directory: acsal_uat
 
 
     steps:
@@ -27,8 +27,8 @@ jobs:
         id: filter
         with:
           filters: |
-            import_pipeline_uat:
-              - 'import_pipeline_uat/**
+            acsal_uat:
+              - 'acsal_uat/module**
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Init
